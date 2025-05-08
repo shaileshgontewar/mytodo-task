@@ -35,7 +35,7 @@ export const createTask = createAsyncThunk(
   async (taskData, thunkAPI) => {
     try {
       const response = await axios.post("/api/tasks", taskData);
-      toast.success('Task created successfully');
+      toast.success("Task created successfully");
       return response.data;
     } catch (err) {
       return thunkAPI.rejectWithValue(err.response?.data?.message);
@@ -47,7 +47,8 @@ export const updateTask = createAsyncThunk(
   "tasks/updateTask",
   async ({ id, data }, thunkAPI) => {
     try {
-      const response = await axios.put(`/api/tasks/${id}, data`);
+      const response = await axios.put(`/api/tasks/${id}`, data);
+      toast.success('Task updated');
       return response.data;
     } catch (err) {
       return thunkAPI.rejectWithValue(err.response?.data?.message);
@@ -62,6 +63,19 @@ export const deleteTask = createAsyncThunk(
       await axios.delete(`/api/tasks/${id}`);
       return id;
     } catch (err) {
+      return thunkAPI.rejectWithValue(err.response?.data?.message);
+    }
+  }
+);
+
+export const getTaskById = createAsyncThunk(
+  "tasks/getTaskById",
+  async (id, thunkAPI) => {
+    try {
+      const res = await axios.get(`/api/tasks/${id}`);
+      return res.data;
+    } catch (err) {
+      toast.error("Failed to load task");
       return thunkAPI.rejectWithValue(err.response?.data?.message);
     }
   }
@@ -86,7 +100,7 @@ const taskSlice = createSlice({
       .addCase(fetchTasks.fulfilled, (state, action) => {
         state.status = "succeeded";
         state.tasks = action.payload.tasks;
-        state.totalTasks = action.payload.total;
+        state.totalTasks = action.payload.totalPages;
       })
       .addCase(fetchTasks.rejected, (state, action) => {
         state.status = "failed";

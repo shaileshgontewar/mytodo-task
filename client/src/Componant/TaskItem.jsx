@@ -1,9 +1,11 @@
 import React from "react";
 import { useDispatch } from "react-redux";
-import { deleteTask, updateTask } from "../taskSlice";
+import { deleteTask, updateTask } from "../features/tasks/taskSlice";
+import { useNavigate } from "react-router-dom";
 
 const TaskItem = ({ task }) => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const handleToggleStatus = () => {
     dispatch(
@@ -18,14 +20,30 @@ const TaskItem = ({ task }) => {
     dispatch(deleteTask(task._id));
   };
 
+  const handleEdit = (task) => {
+    navigate(`/tasks/${task._id}`);
+  };
+
   return (
     <div className="p-4 border rounded mb-2 flex justify-between items-center bg-white shadow-sm">
       <div>
-        <h3 className="font-bold">{task.name}</h3>
-        <p>{task.description}</p>
-        <p className="text-sm text-gray-500">Status: {task.status}</p>
+        <h3 className="text-xl font-bold">{task.name}</h3>
+        <p className="text-sm text-gray-600">{task.description}</p>
+        <p
+          className={`text-sm font-medium ${
+            task.status === "DONE" ? "text-green-500" : "text-red-500"
+          }`}
+        >
+          {task.status}
+        </p>
       </div>
       <div className="flex space-x-2">
+        <button
+          onClick={() => handleEdit(task)}
+          className="bg-blue-500 text-white px-4 py-2 mt-2 mr-2 rounded-md"
+        >
+          Edit
+        </button>
         <button
           onClick={handleToggleStatus}
           className="px-3 py-1 bg-yellow-400 text-white rounded"

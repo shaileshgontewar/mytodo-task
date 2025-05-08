@@ -1,13 +1,15 @@
 import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchTasks, setPage, setFilter } from "../features/tasks/taskSlice";
-
+import TaskItem from "../Componant/TaskItem";
 
 const TaskList = () => {
   const dispatch = useDispatch();
   const { tasks, currentPage, totalTasks, filters } = useSelector(
     (state) => state.tasks
   );
+
+  console.log(totalTasks, "totalTasks");
 
   useEffect(() => {
     dispatch(fetchTasks());
@@ -46,11 +48,11 @@ const TaskList = () => {
           <option value="DONE">Done</option>
         </select>
       </div>
-      {tasks.map((task) => (
+      {tasks?.map((task) => (
         <TaskItem key={task._id} task={task} />
       ))}
       <div className="flex justify-center mt-4">
-        {[...Array(Math.ceil(totalTasks / 10)).keys()].map((n) => (
+        {[...Array(Math.ceil((totalTasks || 0) / 10)).keys()]?.map((n) => (
           <button
             key={n}
             onClick={() => handlePageChange(n + 1)}

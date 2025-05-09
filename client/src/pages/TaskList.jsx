@@ -8,7 +8,10 @@ const TaskList = () => {
   const { tasks, currentPage, totalTasks, filters } = useSelector(
     (state) => state.tasks
   );
-
+  // const [filters, setFilters] = useState({
+  //   status: '',
+  //   date: '',
+  //   });
   console.log(totalTasks, "totalTasks");
 
   useEffect(() => {
@@ -17,6 +20,9 @@ const TaskList = () => {
 
   const handleSearch = (e) => {
     dispatch(setFilter({ search: e.target.value }));
+  };
+  const handleSearchDate = (e) => {
+    dispatch(setFilter({ date: e.target.value }));
   };
 
   const handleStatusFilter = (e) => {
@@ -38,6 +44,13 @@ const TaskList = () => {
           onChange={handleSearch}
           className="border p-2 w-1/3"
         />
+        <input
+          type="date"
+          name="date"
+          value={filters.date}
+          onChange={handleSearchDate}
+          className="border px-3 py-2 rounded"
+        />
         <select
           onChange={handleStatusFilter}
           value={filters.status}
@@ -48,9 +61,14 @@ const TaskList = () => {
           <option value="DONE">Done</option>
         </select>
       </div>
-      {tasks?.map((task) => (
+      { tasks?.length > 0 ? ( tasks?.map((task) => (
         <TaskItem key={task._id} task={task} />
-      ))}
+      )))
+      : (
+        <p>No tasks found.</p>
+      )
+      
+     }
       <div className="flex justify-center mt-4">
         {[...Array(Math.ceil((totalTasks || 0) / 10)).keys()]?.map((n) => (
           <button

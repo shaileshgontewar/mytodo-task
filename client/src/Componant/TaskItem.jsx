@@ -36,11 +36,12 @@ const TaskItem = ({ task }) => {
         >
           {task.status}
         </p>
+        <p className="text-sm text-gray-600">Created: {new Date(task.createdAt).toLocaleDateString()}</p>
       </div>
       <div className="flex space-x-2">
         <button
           onClick={() => handleEdit(task)}
-          className="bg-blue-500 text-white px-4 py-2 mt-2 mr-2 rounded-md"
+          className="bg-blue-400 text-white px-3 py-1 rounded"
         >
           Edit
         </button>

@@ -26,10 +26,8 @@ export const loginUser = createAsyncThunk(
   "auth/login",
   async (formData, thunkAPI) => {
     try {
-      
-      
       const response = await axios.post("/api/auth/login", formData);
-      toast.success('Login successful!');
+      toast.success("Login successful!");
       return response.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response.data.message);
@@ -67,6 +65,10 @@ const authSlice = createSlice({
         state.user = action.payload.user;
         state.token = action.payload.token;
         localStorage.setItem("token", action.payload.token);
+      })
+      .addCase(loginUser.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.payload;
       });
   },
 });

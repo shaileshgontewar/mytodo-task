@@ -1,10 +1,12 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { loginUser } from "../features/auth/authSlice";
 import { useNavigate } from "react-router-dom";
 
 const Login = () => {
   const dispatch = useDispatch();
+    const navigate = useNavigate();
+  const { token, status, error } = useSelector((state) => state.auth);
   const [formData, setFormData] = useState({ email: "", password: "" });
 
   const handleSubmit = (e) => {
@@ -12,16 +14,14 @@ const Login = () => {
     dispatch(loginUser(formData));
   };
 
-  const handleLogin = (e) => {
-    e.preventDefault();
-    const user = { email, password };
-    dispatch(loginUser(dispatch, user));
-    navigate("/home");
-  };
+  useEffect(() => {
+    if (token) navigate("/tasks");
+  }, [token]);
 
   return (
     <div className="max-w-md mx-auto mt-10 p-6 border shadow bg-white">
       <h2 className="text-2xl font-bold mb-4 text-center">Login</h2>
+      {error && <p className="text-red-500 mb-2">{error}</p>}
       <form onSubmit={handleSubmit} className="space-y-4">
         <input
           type="email"
